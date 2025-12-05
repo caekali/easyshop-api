@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,9 +34,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthenticationException|AuthorizationException $e) {
             return ApiResponse::error('Unauthorized access', 403);
         });
+        
 
         // Catch-all for any other unhandled exceptions
-        // $exceptions->render(function (Throwable $e) {
-        //     return ApiResponse::error('Internal Server error', 500);
-        // });
+        $exceptions->render(function (Throwable $e) {
+            return ApiResponse::error('Internal Server error:'.$e->__toString(), 500);
+        });
     })->create();

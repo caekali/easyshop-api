@@ -12,9 +12,10 @@ class CartController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
+ 
         $user = Auth::user();
 
         $cart = $user->cart()->first();
