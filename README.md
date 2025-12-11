@@ -284,4 +284,4 @@ MIT License - free for commercial and personal use
 
 
 **Related Projects:**
-- [EasyShop Android App](https://github.com/caekali/EasyShop) - The mobile client for this API
+- [EasyShop Android App](https://github.com/caekali/Easy-Shop) - The mobile client for this API
