@@ -25,25 +25,21 @@ class AuthController extends BaseController
 
     }
 
-    public function register(Request $request)
+    public function signup(Request $request)
     {
 
         $data = $request->validate([
-            'name' => 'required|string|unique:users,name',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed',
-            'phone' => 'sometimes|string',
-            'address' => 'sometimes|string',
-
         ]);
 
         $data['password'] = Hash::make($data['password']);
 
         User::create($data);
 
-        return response()->json([
-            'message' => 'Account Register Successfully',
-        ], 201);
+         return $this->successResponse(message:'Account Register Successfully',code: 201);
     }
 
     public function signin(Request $request)
