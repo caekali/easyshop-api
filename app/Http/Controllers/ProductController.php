@@ -76,8 +76,8 @@ class ProductController extends BaseController
         $product = Product::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|unique:products,name,except,'.$id,
-            'slug' => 'required|string|unique:products,slug,except,'.$id,
+            'name' => 'required|string|unique:products,name,'.$id,
+            'slug' => 'required|string|unique:products,slug,'.$id,
             'description' => 'required|string',
             'price' => 'required|decimal:2',
             'stock' => 'required|integer',

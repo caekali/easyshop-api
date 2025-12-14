@@ -53,9 +53,9 @@ class CategoryController extends BaseController
     public function update(Request $request,$id)
     {
         $category = Category::findOrFail($id);
-dd($request);
+
         $data = $request->validate([
-            'name' => 'required|string|unique:categories,name,except,'.$id,
+            'name' => 'required|string|unique:categories,name,'.$id,
             'image' => 'sometimes|image|mimes:jpeg,png,jpg',
         ]);
 
