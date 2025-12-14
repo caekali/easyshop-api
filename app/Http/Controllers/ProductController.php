@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +17,14 @@ class ProductController extends BaseController
     {
         $products = Product::filter($request->all())->get();
 
-        return $this->successResponse($products);
+        return $this->successResponse(ProductResource::collection($products));
+    }
+
+    public function getProductsByCategory($id){
+        Category::findOrfail($id);
+        $products = Product::where('category_id',$id)->get();
+
+        return $this->successResponse(ProductResource::collection($products));
     }
 
     /**
@@ -30,6 +39,7 @@ class ProductController extends BaseController
             'price' => 'required|decimal:2',
             'stock' => 'required|integer',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg',
+            'category_id' => 'required|integer|exists:categories,id'
         ]);
 
         if ($request->hasFile('image')) {
@@ -49,12 +59,7 @@ class ProductController extends BaseController
     {
         $product = Product::findOrfail($id);
 
-        // if ($product['image_url']) {
-        //     $url = Storage::disk('public')->url($product->image_url);
-        //     $product['image_url'] = $$product->image_url;
-        // }
-
-        return $this->successResponse($product);
+        return $this->successResponse(new ProductResource($product));
     }
 
     /**
@@ -65,8 +70,8 @@ class ProductController extends BaseController
         $product = Product::findOrFail($id);
 
         $data = $request->validate([
-            'name' => 'required|string|unique:products,name,'.$id,
-            'slug' => 'required|string|unique:products,slug,'.$id,
+            'name' => 'required|string|unique:products,name,except,'.$id,
+            'slug' => 'required|string|unique:products,slug,except,'.$id,
             'description' => 'required|string',
             'price' => 'required|decimal:2',
             'stock' => 'required|integer',
