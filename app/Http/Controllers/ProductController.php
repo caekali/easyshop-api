@@ -13,16 +13,22 @@ class ProductController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request, $categoryId = null)
     {
-        $products = Product::filter($request->all())->get();
+        Category::findOrfail($categoryId);
+        $products = Product::when(
+            $categoryId,
+            fn ($query) => $query->where('category_id', $categoryId)
+        )->get();
+
 
         return $this->successResponse(ProductResource::collection($products));
     }
 
-    public function getProductsByCategory($id){
+    public function getProductsByCategory($id)
+    {
         Category::findOrfail($id);
-        $products = Product::where('category_id',$id)->get();
+        $products = Product::where('category_id', $id)->get();
 
         return $this->successResponse(ProductResource::collection($products));
     }
@@ -39,7 +45,7 @@ class ProductController extends BaseController
             'price' => 'required|decimal:2',
             'stock' => 'required|integer',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg',
-            'category_id' => 'required|integer|exists:categories,id'
+            'category_id' => 'required|integer|exists:categories,id',
         ]);
 
         if ($request->hasFile('image')) {
