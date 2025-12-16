@@ -11,9 +11,17 @@ class HomeController extends BaseController
 {
     public function index()
     {
-        $categories = Category::take(8)->get();
-        $topSelling = Product::all();
-        $newIn = Product::take(8)->get();
+        $categories = Category::limit(8)->withCount('products')->get();
+        
+        $topSelling = Product::withSum('orderItems as total_sold', 'quntity')
+            ->orderByDesc('total_sold')
+            ->limit(8)
+            ->get();
+
+        // Filter new products by date
+        $newIn = Product::where('created_at', '>=', now()->subWeek())
+            ->limit(8)
+            ->get();
 
         return $this->successResponse([
             'categories' => CategoryResource::collection($categories),
