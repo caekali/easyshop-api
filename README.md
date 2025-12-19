@@ -283,5 +283,5 @@ MIT License - free for commercial and personal use
 - [ ] Multi-language support
 
 
-**Related Projects:**
-- [Shopper Android App](https://github.com/caekali/Shopper) - The mobile client for this API
+<!-- **Related Projects:**
+- [Shopper Android App](https://github.com/caekali/Shopper) - The mobile client for this API -->
